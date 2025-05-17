@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepetim</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        Etkinlik Yönetim Sistemi
+    </header>
+
+    <div class="container">
+        <main class="sepet-icerik">
+            <h1>Sepetim</h1>
+            <section id="sepet-etkinlikler">
+                <h2>Seçilen Etkinlikler</h2>
+                <ul id="sepet-listesi">
+                    </ul>
+                <p id="sepet-bos-mesaji">Sepetiniz henüz boş.</p>
+            </section>
+
+            <section id="bilet-bilgileri">
+                <h2>Bilet Bilgileri</h2>
+                <div id="bilet-turu-secimi">
+                    </div>
+                <div id="toplam-fiyat">
+                    <strong>Toplam Fiyat:</strong> <span id="toplam-fiyat-deger">0.00 TL</span>
+                </div>
+            </section>
+
+            <section id="odeme-yontemi">
+                <h2>Ödeme Yöntemi Seçimi</h2>
+                <form id="odeme-formu">
+                    <div>
+                        <input type="radio" id="kredi-karti" name="odeme-yontemi" value="kredi-karti">
+                        <label for="kredi-karti">Kredi Kartı</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="banka-havalesi" name="odeme-yontemi" value="banka-havalesi">
+                        <label for="banka-havalesi">Banka Havalesi</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="mobil-odeme" name="odeme-yontemi" value="mobil-odeme">
+                        <label for="mobil-odeme">Mobil Ödeme</label>
+                    </div>
+                    <button type="submit">Ödemeye Geç</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Etkinlik Yönetim Sistemi</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">Kullanım Koşulları</a></p>
+    </footer>
+
+    <!-- API Service script -->
+    <script src="api-service.js"></script>
+    <script src="sepet.js"></script>
+</body>
+</html>

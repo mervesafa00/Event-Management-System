@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etkinlik Yönetim Sistemi</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // API ayarları
+        window.API_CONFIG = {
+            BASE_URL: 'http://127.0.0.1:8000',
+            EVENTS_ENDPOINT: '/api/events/',
+            MEDIA_URL: '/media/'
+        };
+    </script>
+    <style>
+        /* Sol üst köşedeki buton için stil */
+        .index-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: #007bff56;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .index-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="index-button">Ana Sayfa</a>
+        Etkinlik Yönetim Sistemi
+    </header>
+
+    <div class="container">
+        <main class="ana-icerik">
+            <section id="etkinlikler">
+                <h2>Etkinlikler</h2>
+                <div class="etkinlik-listesi">
+                    <!-- Etkinlikler burada listelenecek -->
+                </div>
+            </section>
+
+            <div class="yan-panel">
+                <section id="populer-etkinlikler">
+                    <h2>Popüler Etkinlikler</h2>
+                    <div class="populer-etkinlikler-listesi">
+                        <!-- Popüler etkinlikler burada listelenecek -->
+                    </div>
+                </section>
+
+                <section id="oneriler">
+                    <h2>İlgi Alanlarınıza Göre Öneriler</h2>
+                    <div class="oneriler-listesi">
+                        <!-- Öneriler burada listelenecek -->
+                    </div>
+                </section>
+
+                <section id="hava-durumu">
+                    <h2>Hava Durumu</h2>
+                    <div id="hava-durumu-bilgisi">
+                        <!-- Hava durumu bilgisi burada gösterilecek -->
+                    </div>
+                    
+                </section>
+                <section id="hava-durumu">
+                    <h2>profil</h2>
+                    <a href="profil.html">profil-bilgisi</a>
+                    </div>
+                    
+                </section>
+            </div>
+
+            <div class="sepet-alani">
+                <a href="sepet.html">Sepetim (0)</a>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Etkinlik Yönetim Sistemi</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">Kullanım Koşulları</a></p>
+    </footer>
+
+    <!-- Varsayılan görseller -->
+
+
+    <script src="api-service.js"></script>
+    <script src="ana_ekran.js"></script>
+</body>
+</html>

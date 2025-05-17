@@ -1,0 +1,11 @@
+Django==4.2.7
+djangorestframework==3.14.0
+django-cors-headers==4.3.0
+python-dotenv==1.0.0
+Pillow==10.1.0  # Resim işleme için gerekli
+drf-yasg==1.21.7  # API dokümantasyonu için
+django-filter==23.3  # Filtreleme özellikleri için
+django-ckeditor==6.7.0  # Admin paneli için zengin metin editörü
+python-dateutil==2.8.2  # Tarih işlemleri için
+whitenoise==6.5.0  # Statik dosya servis etmek için
+django-cleanup==8.0.0  # Silinen nesnelerin medya dosyalarını otomatik temizler

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - Etkinlik Yönetim Sistemi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        Etkinlik Yönetim Sistemi
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="auth-form-container">
+                <h1>Yeni Hesap Oluştur</h1>
+                <form id="kayitFormu" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">E-posta Adresi</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ad">Ad</label>
+                            <input type="text" id="ad" name="ad">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="soyad">Soyad</label>
+                            <input type="text" id="soyad" name="soyad">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sifre">Şifre</label>
+                        <input type="password" id="sifre" name="sifre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sifreTekrar">Şifre (Tekrar)</label>
+                        <input type="password" id="sifreTekrar" name="sifreTekrar" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>İlgi Alanlarınız (En az 3 tane seçiniz)</label>
+                        <div class="ilgi-alanlari-container">
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiMuzik" name="ilgiAlanlari" value="muzik">
+                                <label for="ilgiMuzik">Müzik</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiSpor" name="ilgiAlanlari" value="spor">
+                                <label for="ilgiSpor">Spor</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiSanat" name="ilgiAlanlari" value="sanat">
+                                <label for="ilgiSanat">Sanat</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiBilim" name="ilgiAlanlari" value="bilim">
+                                <label for="ilgiBilim">Bilim ve Teknoloji</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiEgitim" name="ilgiAlanlari" value="egitim">
+                                <label for="ilgiEgitim">Eğitim</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiYemek" name="ilgiAlanlari" value="yemek">
+                                <label for="ilgiYemek">Yemek</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiSeyahat" name="ilgiAlanlari" value="seyahat">
+                                <label for="ilgiSeyahat">Seyahat</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiSinema" name="ilgiAlanlari" value="sinema">
+                                <label for="ilgiSinema">Sinema</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiTiyatro" name="ilgiAlanlari" value="tiyatro">
+                                <label for="ilgiTiyatro">Tiyatro</label>
+                            </div>
+                            <div class="ilgi-alani-secim">
+                                <input type="checkbox" id="ilgiEdebiyat" name="ilgiAlanlari" value="edebiyat">
+                                <label for="ilgiEdebiyat">Edebiyat</label>
+                            </div>
+                        </div>
+                        <p class="ilgi-alanlari-bilgi" id="ilgiAlanlariSayisi">0/3 seçildi</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit">Kayıt Ol</button>
+                    </div>
+                    
+                    <div id="kayitMesaji" class="mesaj"></div>
+                    
+                    <div class="form-footer">
+                        Zaten hesabın var mı? <a href="giris.html">Giriş Yap</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Etkinlik Yönetim Sistemi</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">Kullanım Koşulları</a></p>
+    </footer>
+  
+      <!-- API Service -->
+    <script src="api-service.js"></script>
+    <script src="kayit.js"></script>
+</body>
+</html>

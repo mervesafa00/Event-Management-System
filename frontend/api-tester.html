@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Bağlantı Test Aracı</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        .endpoint-group {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .endpoint {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .endpoint-title {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .get { background-color: #61affe; }
+        .post { background-color: #49cc90; }
+        .put { background-color: #fca130; }
+        .delete { background-color: #f93e3e; }
+        .url {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 3px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .response-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: auto;
+            max-height: 200px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .success {
+            color: #28a745;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .test-info {
+            background-color: #e2f0fd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .status-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background-color: #2ecc71;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+        .config-panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 5px;
+            border: 1px solid #cde1ff;
+        }
+        .config-panel input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            height: 20px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        .test-all-btn {
+            background-color: #9c27b0;
+            padding: 10px 16px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        summary {
+            cursor: pointer;
+            padding: 8px 0;
+            font-weight: bold;
+            color: #555;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge-success { background-color: #d4edda; color: #155724; }
+        .badge-error { background-color: #f8d7da; color: #721c24; }
+        .badge-pending { background-color: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="status-bar" id="statusBar"></div>
+    <div class="container">
+        <h1>Etkinlik Yönetim Sistemi API Test Aracı</h1>
+        
+        <div class="config-panel">
+            <h3>API Yapılandırması</h3>
+            <div>
+                <label for="apiUrlInput">API Base URL:</label>
+                <input type="text" id="apiUrlInput" value="http://127.0.0.1:8000" />
+            </div>
+            <div style="margin-top: 15px;">
+                <label for="authTokenInput">Kimlik Token (Opsiyonel):</label>
+                <input type="text" id="authTokenInput" placeholder="Token buraya..." value="" />
+                <button id="loadTokenFromStorage">LocalStorage'dan Yükle</button>
+            </div>
+        </div>
+
+        <button id="testAllButton" class="test-all-btn">Tüm Endpoint'leri Test Et</button>
+        
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Kimlik Doğrulama Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method post">POST</span>
+                    <span>Kullanıcı Kaydı</span>
+                    <span class="url">/api/users/register/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek yeni bir kullanıcı oluşturur (test için rastgele bir kullanıcı oluşturulacak)
+                </div>
+                <button class="test-button" data-method="POST" data-url="/api/users/register/" data-body="{
+                    &quot;username&quot;: &quot;testuser_${Date.now()}&quot;,
+                    &quot;email&quot;: &quot;testuser_${Date.now()}@example.com&quot;,
+                    &quot;password&quot;: &quot;Test12345&quot;,
+                    &quot;password2&quot;: &quot;Test12345&quot;,
+                    &quot;first_name&quot;: &quot;Test&quot;,
+                    &quot;last_name&quot;: &quot;User&quot;,
+                    &quot;interests&quot;: &quot;muzik,spor,sanat&quot;
+                }">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method post">POST</span>
+                    <span>Giriş Yap</span>
+                    <span class="url">/api/users/token/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, kullanıcı kimlik bilgilerini doğrular ve bir kimlik belirteci döndürür
+                </div>
+                <button class="test-button" data-method="POST" data-url="/api/users/token/" data-body="{
+                    &quot;username&quot;: &quot;admin&quot;,
+                    &quot;password&quot;: &quot;admin123&quot;
+                }">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Kullanıcı Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Mevcut Kullanıcı Bilgileri</span>
+                    <span class="url">/api/users/me/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, oturum açmış kullanıcının verilerini döndürür (kimlik doğrulama belirteci gerektirir)
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/users/me/" data-auth-required="true">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method put">PUT</span>
+                    <span>Kullanıcı Bilgilerini Güncelle</span>
+                    <span class="url">/api/users/me/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, oturum açmış kullanıcının verilerini günceller (kimlik doğrulama belirteci gerektirir)
+                </div>
+                <button class="test-button" data-method="PUT" data-url="/api/users/me/" data-auth-required="true" data-body="{
+                    &quot;interests&quot;: &quot;muzik,spor,sanat,bilim,egitim&quot;
+                }">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Etkinlik Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Tüm Etkinlikleri Listele</span>
+                    <span class="url">/api/events/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/events/">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method post">POST</span>
+                    <span>Yeni Etkinlik Oluştur</span>
+                    <span class="url">/api/events/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, yeni bir etkinlik oluşturur (kimlik doğrulama belirteci gerektirir)
+                </div>
+                <button class="test-button" data-method="POST" data-url="/api/events/" data-auth-required="true" data-body="{
+                    &quot;title&quot;: &quot;Test Etkinliği ${Date.now()}&quot;,
+                    &quot;description&quot;: &quot;Bu bir test etkinliğidir&quot;,
+                    &quot;start_date&quot;: &quot;2025-06-01T10:00:00Z&quot;,
+                    &quot;end_date&quot;: &quot;2025-06-01T12:00:00Z&quot;,
+                    &quot;location&quot;: &quot;Test Lokasyonu&quot;,
+                    &quot;address&quot;: &quot;Test Adresi, İstanbul&quot;,
+                    &quot;capacity&quot;: 50,
+                    &quot;ticket_price&quot;: 25.00,
+                    &quot;is_free&quot;: false,
+                    &quot;is_published&quot;: true,
+                    &quot;interest_category&quot;: &quot;muzik&quot;
+                }">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Etkinlik Ayrıntıları</span>
+                    <span class="url">/api/events/1/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/events/1/">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method post">POST</span>
+                    <span>Etkinliğe Kayıt Ol</span>
+                    <span class="url">/api/events/1/register/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, kullanıcıyı etkinliğe kaydeder (kimlik doğrulama belirteci gerektirir)
+                </div>
+                <button class="test-button" data-method="POST" data-url="/api/events/1/register/" data-auth-required="true" data-body="{
+                    &quot;ticket_type&quot;: &quot;standard&quot;,
+                    &quot;count&quot;: 1
+                }">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Duyuru Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Aktif Duyuruları Listele</span>
+                    <span class="url">/api/events/duyurular/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/events/duyurular/">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Kategori Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Tüm Kategorileri Listele</span>
+                    <span class="url">/api/events/categories/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/events/categories/">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+        
+        <div class="endpoint-group">
+            <h2>Kayıt Endpoint'leri</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-title">
+                    <span class="method get">GET</span>
+                    <span>Kullanıcının Etkinlik Kayıtları</span>
+                    <span class="url">/api/events/registrations/</span>
+                    <span class="badge badge-pending">Test Edilmedi</span>
+                </div>
+                <div class="test-info">
+                    Bu istek, oturum açmış kullanıcının kayıtlı olduğu etkinlikleri listeler (kimlik doğrulama belirteci gerektirir)
+                </div>
+                <button class="test-button" data-method="GET" data-url="/api/events/registrations/" data-auth-required="true">Test Et</button>
+                <div class="response-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const apiUrlInput = document.getElementById('apiUrlInput');
+            const authTokenInput = document.getElementById('authTokenInput');
+            const loadTokenFromStorageBtn = document.getElementById('loadTokenFromStorage');
+            const testAllButton = document.getElementById('testAllButton');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const statusBar = document.getElementById('statusBar');
+            
+            // LocalStorage'dan token yükleme
+            loadTokenFromStorageBtn.addEventListener('click', function() {
+                const token = localStorage.getItem('authToken');
+                if (token) {
+                    authTokenInput.value = token;
+                    showStatus('Token başarıyla LocalStorage\'dan yüklendi!', 'success');
+                } else {
+                    showStatus('LocalStorage\'da token bulunamadı!', 'error');
+                }
+            });
+            
+            // Tüm endpoint'leri test etme
+            testAllButton.addEventListener('click', async function() {
+                const testButtons = document.querySelectorAll('.test-button');
+                let totalTests = testButtons.length;
+                let completedTests = 0;
+                
+                progressContainer.style.display = 'block';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                
+                for (const button of testButtons) {
+                    // Test butonuna tıklama olayını simüle ederek test et
+                    button.click();
+                    
+                    // Kısa bir gecikme ekle (API sunucusunu boğmamak için)
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                    
+                    // İlerleme çubuğunu güncelle
+                    completedTests++;
+                    updateProgress(completedTests, totalTests);
+                }
+                
+                showStatus('Tüm endpoint testleri tamamlandı!', 'success');
+            });
+            
+            // Test butonlarına dinleyici ekle
+            document.querySelectorAll('.test-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const endpoint = this.closest('.endpoint');
+                    const responseBox = endpoint.querySelector('.response-box');
+                    const badge = endpoint.querySelector('.badge');
+                    
+                    // URL ve method bilgilerini al
+                    const apiBaseUrl = apiUrlInput.value;
+                    const urlPath = this.getAttribute('data-url');
+                    const method = this.getAttribute('data-method');
+                    const authRequired = this.getAttribute('data-auth-required') === 'true';
+                    let bodyData = this.getAttribute('data-body');
+                    
+                    // Body değerlerini dinamik olarak doldur
+                    if (bodyData) {
+                        bodyData = bodyData.replace(/\${Date\.now\(\)}/g, Date.now());
+                        bodyData = JSON.parse(bodyData);
+                    }
+                    
+                    // İstek ayarlarını hazırla
+                    const requestOptions = {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    };
+                    
+                    // Kimlik doğrulama belirteci gerekliyse ekle
+                    if (authRequired) {
+                        const token = authTokenInput.value;
+                        if (!token) {
+                            responseBox.style.display = 'block';
+                            responseBox.textContent = 'Hata: Kimlik doğrulama belirteci gerekiyor. Lütfen bir token girin.';
+                            responseBox.className = 'response-box error';
+                            badge.className = 'badge badge-error';
+                            badge.textContent = 'Başarısız';
+                            return;
+                        }
+                        requestOptions.headers['Authorization'] = `Token ${token}`;
+                    }
+                    
+                    // Body verisi ekle
+                    if (bodyData && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+                        requestOptions.body = JSON.stringify(bodyData);
+                    }
+                    
+                    // İsteği gönder
+                    responseBox.style.display = 'block';
+                    responseBox.textContent = 'İstek gönderiliyor...';
+                    responseBox.className = 'response-box';
+                    badge.className = 'badge badge-pending';
+                    badge.textContent = 'İşleniyor';
+                    
+                    fetch(`${apiBaseUrl}${urlPath}`, requestOptions)
+                        .then(response => {
+                            // HTTP yanıt durum kodunu al
+                            const status = response.status;
+                            const statusText = response.statusText;
+                            
+                            // Yanıtı JSON olarak dönüştürmeye çalış
+                            return response.text().then(text => {
+                                try {
+                                    return {
+                                        status: status,
+                                        statusText: statusText,
+                                        body: JSON.parse(text)
+                                    };
+                                } catch (e) {
+                                    // JSON olarak ayrıştırılamıyorsa ham metni döndür
+                                    return {
+                                        status: status,
+                                        statusText: statusText,
+                                        body: text
+                                    };
+                                }
+                            });
+                        })
+                        .then(response => {
+                            // Yanıtı göster
+                            const isSuccess = response.status >= 200 && response.status < 300;
+                            
+                            // Endpoint'in başarı/başarısızlık durumunu göster
+                            badge.className = `badge badge-${isSuccess ? 'success' : 'error'}`;
+                            badge.textContent = isSuccess ? 'Başarılı' : 'Başarısız';
+                            
+                            // Yanıt kutusunu güncelle
+                            responseBox.className = `response-box ${isSuccess ? 'success' : 'error'}`;
+                            responseBox.textContent = 
+                                `Status: ${response.status} ${response.statusText}\n\n` + 
+                                JSON.stringify(response.body, null, 2);
+                                
+                            // Giriş endpoint'i için, token'ı otomatik olarak ayarla
+                            if (isSuccess && urlPath === '/api/users/token/' && response.body.token) {
+                                authTokenInput.value = response.body.token;
+                                showStatus('Token başarıyla alındı ve ayarlandı!', 'success');
+                            }
+                        })
+                        .catch(error => {
+                            // Hata durumunda
+                            console.error('API isteği hatası:', error);
+                            responseBox.className = 'response-box error';
+                            responseBox.textContent = `Hata: ${error.message}`;
+                            
+                            badge.className = 'badge badge-error';
+                            badge.textContent = 'Hata';
+                        });
+                });
+            });
+            
+            // İlerleme çubuğu güncelleme
+            function updateProgress(completed, total) {
+                const percentage = Math.floor((completed / total) * 100);
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}%`;
+            }
+            
+            // Durum çubuğu gösterme
+            function showStatus(message, type) {
+                statusBar.textContent = message;
+                statusBar.style.backgroundColor = type === 'success' ? '#2ecc71' : '#e74c3c';
+                statusBar.style.display = 'block';
+                
+                // 3 saniye sonra otomatik kapat
+                setTimeout(() => {
+                    statusBar.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html> 

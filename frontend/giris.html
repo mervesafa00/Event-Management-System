@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Etkinlik Yönetim Sistemi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        Etkinlik Yönetim Sistemi
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="auth-form-container">
+                <h1>Giriş Yap</h1>
+                <form id="girisFormu" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" required placeholder="ornek@eposta.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sifre">Şifre</label>
+                        <input type="password" id="sifre" name="sifre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit">Giriş Yap</button>
+                    </div>
+                    
+                    <div id="girisMesaji" class="mesaj"></div>
+                    
+                    <div class="form-footer">
+                        <div>Hesabın yok mu? <a href="kayit.html">Kayıt Ol</a></div>
+                        <div><a href="sifre-degistir.html?reset=true">Şifremi Unuttum</a></div>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Etkinlik Yönetim Sistemi</p>
+        <p><a href="#">Gizlilik Politikası</a> | <a href="#">Kullanım Koşulları</a></p>
+    </footer>
+      <!-- API Service -->
+    <script src="api-service.js"></script>
+   
+    <script src="giris.js"></script>
+</body>
+</html>
